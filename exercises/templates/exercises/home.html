@@ -1,0 +1,48 @@
+{% extends 'exercises/base.html' %}
+
+{% block content %}
+    <h1 data-i18n="homeTitle">Fill-in-the-blanks generator</h1>
+    <p class="intro" data-i18n="homeIntro">
+        Paste sentences with underscores. Each line should start with <code>- </code>.
+    </p>
+
+    {% if errors %}
+        <div class="error-box" role="alert">
+            <strong>Please fix these issues:</strong>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form id="sentences" name="sentences" method="post" class="input-form">
+        {% csrf_token %}
+        <label for="{{ form.source_text.id_for_label }}" data-i18n="textareaLabel">
+            Sentences with blanks
+        </label>
+        {{ form.source_text }}
+        {% if form.source_text.errors %}
+            <div class="error-box" role="alert">
+                <strong>Please fix these issues:</strong>
+                <ul>
+                    {% for error in form.source_text.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <p class="help-text" data-i18n="textareaHelp">
+            Write one sentence per line. Each line should start with "- " and contain at least one underscore "_".
+        </p>
+        <button type="submit" data-i18n="createButton">Generate exercise</button>
+    </form>
+
+    <div class="example-box">
+        <strong data-i18n="exampleLabel">Example:</strong>
+        <pre>- Ich _ müde.
+- Du _ glücklich.
+- Er _ zu Hause.</pre>
+    </div>
+{% endblock %}
