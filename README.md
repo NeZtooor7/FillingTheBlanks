@@ -4,7 +4,7 @@
 
 The app supports two workflows:
 
-1. **AI mode** — describe what you want to practice, choose the exercise language, level, number of sentences, blanks, and grammar focus. The app generates a structured fill-in-the-blank exercise using an LLM API.
+1. **AI mode** (default) — describe what you want to practice, choose the exercise language, level, number of sentences, blanks, and grammar focus. The app generates a structured fill-in-the-blank exercise using an LLM API.
 2. **Manual mode** — paste your own sentences using underscores (`_`) and turn them into an interactive exercise.
 
 LingoFill is designed for language learning, grammar drills, vocabulary practice, verb conjugation, and personalized cloze-style exercises.
@@ -13,6 +13,7 @@ LingoFill is designed for language learning, grammar drills, vocabulary practice
 
 ## Features
 
+- Add other supported languages like Chinese, French, Arabic, Russian, Persian, Afrikaans, Korean, Quechua, etc.
 - AI-generated fill-in-the-blank exercises
 - Manual fill-in-the-blank exercise creation
 - Multiple blanks per sentence
