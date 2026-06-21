@@ -4,6 +4,14 @@
 .idea
 .idea/
 .idea/*
+__pycache__
+__pycache__/
+__pycache__/*
+staticfiles
+staticfiles/
+staticfiles/*
 *.bat
 *.vbs
 *.sqlite3
+*.pyc
+.env
