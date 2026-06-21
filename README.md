@@ -1,57 +1,165 @@
-# Filling the Blanks
+# LingoFill
 
-A small Django web app for creating fill-in-the-blank exercises from plain text.
+**LingoFill** is a local-first Django web app for creating AI-assisted fill-in-the-blank language exercises.
 
-The app runs locally and converts sentences containing underscores (`_`) into interactive text inputs. After the user fills in all the blanks, the completed numbered sentences can be copied to the clipboard with one click.
+The app supports two workflows:
 
-This project can be especially useful for language learning. You can generate complete fill-in-the-blank exercises with an AI tool such as ChatGPT, Google AI, or another assistant, paste the generated sentences into the app, and practice reading, writing, grammar, vocabulary, or verb conjugation in a new language.
+1. **AI mode** — describe what you want to practice, choose the exercise language, level, number of sentences, blanks, and grammar focus. The app generates a structured fill-in-the-blank exercise using an LLM API.
+2. **Manual mode** — paste your own sentences using underscores (`_`) and turn them into an interactive exercise.
+
+LingoFill is designed for language learning, grammar drills, vocabulary practice, verb conjugation, and personalized cloze-style exercises.
+
+---
 
 ## Features
 
-* Generate fill-in-the-blank exercises from plain text
-* Support for multiple sentences
-* Support for multiple blanks in the same sentence
-* Automatic numbered output
-* Copy completed answers to clipboard
-* Dark mode
-* Multilingual interface
-* Flag-based language selector
-* Input validation for the required sentence format
-* Local Apache + Waitress support on Windows
+- AI-generated fill-in-the-blank exercises
+- Manual fill-in-the-blank exercise creation
+- Multiple blanks per sentence
+- Multiple sentences per exercise
+- Local answer checking against generated `correct_answers`
+- AI explanations only for incorrect answers
+- Correction results page with correct and wrong matches
+- Separate **interface language** and **exercise language**
+- Multilingual interface
+- Exercise language selector
+- Light/dark mode, with dark mode as the default
+- Flag-based language dropdowns
+- Custom multiselect field for grammar focus
+- Clipboard support for completed manual exercises
+- Input validation for manual sentence format
+- Local-first design
+- Windows support with Waitress and Apache reverse proxy
 
-## Example
+---
 
-### Input
+## Supported Interface Languages
+
+The webpage interface can be displayed in:
+
+- Spanish
+- English
+- German
+- Japanese
+- Hindi
+- Romanian
+- Italian
+- Portuguese
+
+The **interface language** is also used as the explanation language for correction feedback.
+
+---
+
+## Supported Exercise Languages
+
+The AI exercise generator can create exercises in:
+
+- Spanish
+- English
+- German
+- Japanese
+- Hindi
+- Romanian
+- Italian
+- Portuguese
+
+The **exercise language** is independent from the interface language.
+
+Example:
+
+- Interface language: English
+- Exercise language: German
+- Result: German exercises with English explanations
+
+Another example:
+
+- Interface language: Portuguese
+- Exercise language: Japanese
+- Result: Japanese exercises with Portuguese explanations
+
+---
+
+## How It Works
+
+### AI Mode
+
+The user enters a goal such as:
 
 ```text
-- Ich _ müde.
-- Du _ glücklich.
-- Er _ zu Hause.
+Practice sein and haben in present tense with ich, du, er, sie and wir.
 ```
 
-### Exercise
+Then the user selects:
 
-The app turns each underscore into a text input.
+- Exercise language
+- Level
+- Number of sentences
+- Number of blanks
+- Focus areas such as verbs, articles, pronouns, tenses, or expressions
+- Optional advanced fields such as verbs, subjects, tense, topic, and expressions
 
-For example:
+The app sends a structured request to the LLM API and expects a structured response.
 
-```text
-1. Ich [____] müde.
-2. Du [____] glücklich.
-3. Er [____] zu Hause.
+The generated response contains:
+
+- Exercise title
+- Language
+- Level
+- Instructions
+- Sentence templates
+- Full completed sentences
+- Blank metadata
+- Correct answers
+- Grammar focus
+
+Example structure:
+
+```json
+{
+  "exercise_title": "Present tense practice",
+  "language": "German",
+  "level": "A1",
+  "instructions": "Complete the sentences with the correct word.",
+  "sentences": [
+    {
+      "number": 1,
+      "template": "- Ich _ müde.",
+      "full_sentence": "Ich bin müde.",
+      "blanks": [
+        {
+          "position": 1,
+          "correct_answers": ["bin"],
+          "grammar_focus": "sein, present tense, ich"
+        }
+      ]
+    }
+  ]
+}
 ```
 
-### Clipboard output
+### Correction Flow
 
-After filling the blanks with `bin`, `bist`, and `ist`, the **Copy to clipboard** button produces:
+When the user submits an AI-generated exercise:
 
-```text
-1. Ich bin müde.
-2. Du bist glücklich.
-3. Er ist zu Hause.
-```
+1. Django checks the user's answers locally.
+2. If an answer matches one of the `correct_answers`, it is marked as correct.
+3. If an answer does not match, only the wrong blank is sent to the correction model.
+4. The correction model explains the mistake in the selected interface language.
+5. The correction results page shows:
+   - User sentence
+   - Correct sentence
+   - Correct matches
+   - Wrong answers
+   - Correct answers
+   - AI explanations for mistakes
 
-## Input Format
+This keeps API usage low because correct answers do not require an extra model call.
+
+---
+
+## Manual Mode
+
+Manual mode accepts plain text input.
 
 Each line must:
 
@@ -63,34 +171,117 @@ Valid example:
 
 ```text
 - Ich _ müde.
-- Heute _ ich Deutsch.
-- Wir _ in Berlin.
+- Du _ glücklich.
+- Er _ zu Hause.
 ```
 
-Invalid examples:
+The app turns each underscore into a text input.
+
+Example exercise:
 
 ```text
-Ich _ müde.
-- Ich bin müde.
-- _
+1. Ich [____] müde.
+2. Du [____] glücklich.
+3. Er [____] zu Hause.
 ```
+
+After filling the blanks with `bin`, `bist`, and `ist`, the clipboard output becomes:
+
+```text
+1. Ich bin müde.
+2. Du bist glücklich.
+3. Er ist zu Hause.
+```
+
+---
 
 ## Tech Stack
 
-* Python
-* Django
-* HTML
-* CSS
-* JavaScript
-* Waitress
-* Apache HTTP Server
+- Python
+- Django
+- OpenAI API
+- Pydantic
+- python-dotenv
+- HTML
+- CSS
+- JavaScript
+- Waitress
+- Apache HTTP Server
+- WhiteNoise
+
+---
 
 ## Requirements
 
-* Python 3.10+
-* Django 5.x
-* Waitress
-* WhiteNoise
+- Python 3.10+
+- Django 5.x
+- OpenAI Python SDK
+- Pydantic
+- python-dotenv
+- Waitress
+- WhiteNoise
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the project root.
+
+```env
+OPENAI_API_KEY=your-real-api-key-here
+
+OPENAI_GENERATION_MODEL=gpt-5-nano
+OPENAI_CORRECTION_MODEL=gpt-5-mini
+
+OPENAI_TIMEOUT_SECONDS=45
+```
+
+The recommended budget-friendly setup is:
+
+- `gpt-5-nano` for exercise generation
+- `gpt-5-mini` for correction explanations
+
+Correct answers are checked locally first. The correction model is only called for wrong answers.
+
+---
+
+## `.env.example`
+
+Commit this file to the repository as a template:
+
+```env
+OPENAI_API_KEY=your-real-api-key-here
+
+OPENAI_GENERATION_MODEL=gpt-5-nano
+OPENAI_CORRECTION_MODEL=gpt-5-mini
+
+OPENAI_TIMEOUT_SECONDS=45
+```
+
+Never commit your real `.env` file.
+
+---
+
+## `.gitignore`
+
+Recommended entries:
+
+```gitignore
+.env
+db.sqlite3
+__pycache__/
+*.pyc
+staticfiles/
+.venv/
+```
+
+---
 
 ## Local Development Setup
 
@@ -132,18 +323,44 @@ Run the development server:
 python manage.py runserver
 ```
 
-Open the app in your browser:
+Open the app:
 
 ```text
 http://127.0.0.1:8000/FillingTheBlanks/
 ```
 
+---
+
+## Static Files
+
+During development with `runserver`, Django serves static files automatically.
+
+For Apache/Waitress usage, collect static files:
+
+```bash
+python manage.py collectstatic
+```
+
+This copies files from:
+
+```text
+exercises/static/
+```
+
+to:
+
+```text
+staticfiles/
+```
+
+---
+
 ## Running with Waitress
 
-For a local production-like setup on Windows, run:
+From the project root:
 
 ```powershell
-.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8001 fillblanker.wsgi:application
+.\.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8001 fillblanker.wsgi:application
 ```
 
 Then open:
@@ -152,9 +369,17 @@ Then open:
 http://127.0.0.1:8001/FillingTheBlanks/
 ```
 
+The WSGI import target is:
+
+```text
+fillblanker.wsgi:application
+```
+
+---
+
 ## Running with Apache on Windows
 
-This project can also be served locally through Apache using a reverse proxy.
+This project can be served locally through Apache using a reverse proxy.
 
 Expected final URL:
 
@@ -162,90 +387,160 @@ Expected final URL:
 http://localhost/FillingTheBlanks/
 ```
 
-The general flow is:
+General flow:
 
 ```text
 Browser → Apache → Waitress → Django
 ```
 
-Apache serves the public `/FillingTheBlanks/` URL and forwards the request to Waitress running on:
+Apache forwards:
+
+```text
+/FillingTheBlanks/
+```
+
+to Waitress running at:
 
 ```text
 http://127.0.0.1:8001/FillingTheBlanks/
 ```
 
-Static files can be served through Apache using Django’s `collectstatic` output.
+Static files can be served by Apache from:
 
-Run:
+```text
+staticfiles/
+```
+
+After changing CSS or JavaScript, run:
 
 ```bash
 python manage.py collectstatic
 ```
 
-Then configure Apache to serve the `staticfiles` directory through `/static/`.
+Then restart Apache/Waitress if needed.
 
-## Project Structure
+---
+
+## Suggested Project Structure
 
 ```text
-FillingTheBlanks/
+LingoFill/
 ├── exercises/
 │   ├── static/
 │   │   └── exercises/
 │   │       ├── flags/
-│   │       ├── styles.css
-│   │       ├── theme.js
+│   │       ├── clipboard.js
 │   │       ├── i18n.js
-│   │       └── clipboard.js
+│   │       ├── learning_language.js
+│   │       ├── multiselect.js
+│   │       ├── styles.css
+│   │       └── theme.js
 │   ├── templates/
 │   │   └── exercises/
 │   │       ├── base.html
-│   │       ├── home.html
-│   │       └── exercise.html
+│   │       ├── correction_results.html
+│   │       ├── exercise.html
+│   │       └── home.html
 │   ├── forms.py
+│   ├── llm_schemas.py
+│   ├── llm_service.py
 │   ├── urls.py
 │   └── views.py
 ├── fillblanker/
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
+├── staticfiles/
+├── .env.example
+├── .gitignore
 ├── manage.py
-├── requirements.txt
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
-## Multilingual Interface
+---
 
-The interface supports multiple languages using a lightweight JavaScript translation file.
+## Important Design Notes
 
-Supported languages:
+### No database required for core usage
 
-* Spanish
-* English
-* German
-* Japanese
-* Hindi
-* Romanian
-* Italian
-* Portuguese
+LingoFill does not need a database for the main exercise flow.
 
-The app does not translate the user’s sentences. It only translates interface texts such as labels, buttons, help messages, and page titles.
+Generated exercise data can be signed and sent back through the form for correction, avoiding the need to store exercises in a database.
 
-## Notes
+### API keys stay server-side
 
-* This is a local-first project.
-* It does not require a database for the core functionality.
-* The clipboard feature uses browser JavaScript.
-* The app is useful for language learning exercises, especially grammar drills and verb conjugation practice.
+The OpenAI API keys are used only in Django/Python.
+
+They must never be placed in:
+
+- HTML templates
+- JavaScript files
+- GitHub commits
+- Browser code
+
+### Manual mode works without an API key
+
+Manual mode does not require OpenAI API access.
+
+This makes the project usable even without paid API usage.
+
+### AI mode requires an API key
+
+AI exercise generation and AI explanations require OpenAI API access.
+
+---
+
+## Development Workflow
+
+While coding:
+
+```bash
+python manage.py runserver
+```
+
+Use:
+
+```text
+http://127.0.0.1:8000/FillingTheBlanks/
+```
+
+After changing static files and testing with Apache/Waitress:
+
+```bash
+python manage.py collectstatic
+```
+
+For local production-like testing:
+
+```powershell
+.\.venv\Scripts\waitress-serve.exe --listen=127.0.0.1:8001 fillblanker.wsgi:application
+```
+
+Use:
+
+```text
+http://localhost/FillingTheBlanks/
+```
+
+if Apache is configured as a reverse proxy.
+
+---
 
 ## Possible Future Improvements
 
-* Export exercises as PDF
-* Save exercise templates
-* Add answer checking
-* Add support for hints
-* Add keyboard shortcuts
-* Add user-created exercise collections
-* Add Docker support
+- Mock AI mode for offline testing
+- Export exercises as PDF
+- Save exercise templates
+- Add hints
+- Add keyboard shortcuts
+- Add user-created exercise collections
+- Add progress tracking
+- Add Docker support
+- Add unit tests for schema validation and correction logic
+- Add dynamic placeholders based on selected exercise language
+
+---
 
 ## License
 
