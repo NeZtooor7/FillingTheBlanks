@@ -1,14 +1,22 @@
 {% extends 'exercises/base.html' %}
+{% load static %}
 
 {% block content %}
-    <h1 data-i18n="homeTitle">Fill-in-the-blanks generator</h1>
-    <p class="intro" data-i18n="homeIntro">
-        Paste sentences with underscores. Each line should start with <code>- </code>.
-    </p>
+    <section class="hero-section">
+        <p class="eyebrow" data-i18n="homeEyebrow">AI language practice</p>
+
+        <h1 class="brand-title">
+            <span class="brand-name">LingoFill</span>
+        </h1>
+
+        <p class="intro hero-intro" data-i18n="homeIntro">
+            Create smart fill-in-the-blank exercises by describing what you want to practice and choosing the exercise language.
+        </p>
+    </section>
 
     {% if errors %}
         <div class="error-box" role="alert">
-            <strong>Please fix these issues:</strong>
+            <strong data-i18n="errorTitle">Please fix these issues:</strong>
             <ul>
                 {% for error in errors %}
                     <li>{{ error }}</li>
@@ -17,32 +25,262 @@
         </div>
     {% endif %}
 
-    <form id="sentences" name="sentences" method="post" class="input-form">
-        {% csrf_token %}
-        <label for="{{ form.source_text.id_for_label }}" data-i18n="textareaLabel">
-            Sentences with blanks
-        </label>
-        {{ form.source_text }}
-        {% if form.source_text.errors %}
-            <div class="error-box" role="alert">
-                <strong>Please fix these issues:</strong>
-                <ul>
-                    {% for error in form.source_text.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        <p class="help-text" data-i18n="textareaHelp">
-            Write one sentence per line. Each line should start with "- " and contain at least one underscore "_".
-        </p>
-        <button type="submit" data-i18n="createButton">Generate exercise</button>
-    </form>
+    {% if form.source_text.errors %}
+        <div class="error-box" role="alert">
+            <strong data-i18n="errorTitle">Please fix these issues:</strong>
+            <ul>
+                {% for error in form.source_text.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
-    <div class="example-box">
-        <strong data-i18n="exampleLabel">Example:</strong>
-        <pre>- Ich _ müde.
+    <section class="generator-card">
+        <form id="ai-exercise-form" name="ai-exercise-form" class="input-form ai-form"
+                method="post" action="{% url 'exercises:ai_exercise_create' %}">
+            {% csrf_token %}
+            <input type="hidden" id="spoken-language-input" name="spoken_language" value="en">
+
+            <label for="ai_goal" data-i18n="aiGoalLabel">What do you want to practice?</label>
+            <textarea
+                id="ai_goal"
+                name="ai_goal"
+                rows="4"
+                class="sentence-textarea"
+                data-i18n-placeholder="aiGoalPlaceholder"
+                placeholder="Example: Practice sein and haben in present tense with ich, du, er, sie and wir."></textarea>
+
+            <div class="quick-options-grid">
+                <div class="field-group">
+                    <label for="learning-language-toggle" data-i18n="exerciseLanguageLabel">
+                        Exercise language
+                    </label>
+
+                    <div class="language-dropdown learning-language-dropdown">
+                        <input type="hidden" id="learning-language-input" name="learning_language" value="de">
+
+                        <button id="learning-language-toggle" type="button" class="language-toggle" aria-haspopup="true" aria-expanded="false">
+                            <img id="selected-learning-language-flag" src="{% static 'exercises/flags/de.svg' %}" alt="Deutsch" class="flag-icon">
+                            <span id="selected-learning-language-label">Deutsch</span>
+                        </button>
+
+                        <div id="learning-language-menu" class="language-menu hidden">
+                            <button type="button" class="learning-language-option" data-lang="es" data-label="Español" data-flag="{% static 'exercises/flags/es.svg' %}">
+                                <img src="{% static 'exercises/flags/es.svg' %}" alt="Español" class="flag-icon">
+                                <span>Español</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="en" data-label="English" data-flag="{% static 'exercises/flags/en.svg' %}">
+                                <img src="{% static 'exercises/flags/en.svg' %}" alt="English" class="flag-icon">
+                                <span>English</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="de" data-label="Deutsch" data-flag="{% static 'exercises/flags/de.svg' %}">
+                                <img src="{% static 'exercises/flags/de.svg' %}" alt="Deutsch" class="flag-icon">
+                                <span>Deutsch</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="ja" data-label="日本語" data-flag="{% static 'exercises/flags/ja.svg' %}">
+                                <img src="{% static 'exercises/flags/ja.svg' %}" alt="日本語" class="flag-icon">
+                                <span>日本語</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="hi" data-label="हिन्दी" data-flag="{% static 'exercises/flags/hi.svg' %}">
+                                <img src="{% static 'exercises/flags/hi.svg' %}" alt="हिन्दी" class="flag-icon">
+                                <span>हिन्दी</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="ro" data-label="Română" data-flag="{% static 'exercises/flags/ro.svg' %}">
+                                <img src="{% static 'exercises/flags/ro.svg' %}" alt="Română" class="flag-icon">
+                                <span>Română</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="it" data-label="Italiano" data-flag="{% static 'exercises/flags/it.svg' %}">
+                                <img src="{% static 'exercises/flags/it.svg' %}" alt="Italiano" class="flag-icon">
+                                <span>Italiano</span>
+                            </button>
+
+                            <button type="button" class="learning-language-option" data-lang="pt" data-label="Português" data-flag="{% static 'exercises/flags/pt.svg' %}">
+                                <img src="{% static 'exercises/flags/pt.svg' %}" alt="Português" class="flag-icon">
+                                <span>Português</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="level" data-i18n="levelLabel">Level</label>
+                    <select id="level" name="level">
+                        <option value="A1" selected>A1</option>
+                        <option value="A2">A2</option>
+                        <option value="B1">B1</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="sentence_count" data-i18n="sentenceCountLabel">Sentences</label>
+                    <select id="sentence_count" name="sentence_count">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label for="blank_count" data-i18n="blankCountLabel">Blanks</label>
+                    <select id="blank_count" name="blank_count">
+                        <option value="1" selected data-i18n="oneBlankOption">1 blank</option>
+                        <option value="1-2" data-i18n="oneTwoBlanksOption">1–2 blanks</option>
+                        <option value="2-3" data-i18n="twoThreeBlanksOption">2–3 blanks</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="field-group">
+                <label for="focus-multiselect" data-i18n="focusLabel">Focus</label>
+
+                <div class="multiselect" id="focus-multiselect">
+                    <button type="button" class="multiselect-box" id="focus-toggle" aria-expanded="false">
+                        <span class="selected-options" id="focus-selected-options"></span>
+                        <span class="multiselect-placeholder" id="focus-placeholder" data-i18n="focusPlaceholder">
+                            Select focus areas
+                        </span>
+                    </button>
+
+                    <div class="multiselect-menu hidden" id="focus-menu">
+                        <label class="multiselect-option">
+                            <input type="checkbox" name="focus" value="verbs" data-label-key="focusVerbs" checked>
+                            <span data-i18n="focusVerbs">Verbs</span>
+                        </label>
+
+                        <label class="multiselect-option">
+                            <input type="checkbox" name="focus" value="articles" data-label-key="focusArticles">
+                            <span data-i18n="focusArticles">Articles</span>
+                        </label>
+
+                        <label class="multiselect-option">
+                            <input type="checkbox" name="focus" value="pronouns" data-label-key="focusPronouns">
+                            <span data-i18n="focusPronouns">Pronouns</span>
+                        </label>
+
+                        <label class="multiselect-option">
+                            <input type="checkbox" name="focus" value="tenses" data-label-key="focusTenses">
+                            <span data-i18n="focusTenses">Tenses</span>
+                        </label>
+
+                        <label class="multiselect-option">
+                            <input type="checkbox" name="focus" value="expressions" data-label-key="focusExpressions">
+                            <span data-i18n="focusExpressions">Expressions</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <details class="advanced-options">
+                <summary data-i18n="advancedOptionsSummary">Advanced options</summary>
+                <br />
+                <div class="advanced-grid">
+                    <div class="field-group">
+                        <label for="verbs" data-i18n="verbsLabel">Verbs to use</label>
+                        <input
+                            id="verbs"
+                            name="verbs"
+                            type="text"
+                            class="form-control"
+                            data-i18n-placeholder="verbsPlaceholder"
+                            placeholder="sein, haben, gehen">
+                    </div>
+                    <br />
+                    <div class="field-group">
+                        <label for="subjects" data-i18n="subjectsLabel">Subjects to use</label>
+                        <input
+                            id="subjects"
+                            name="subjects"
+                            type="text"
+                            class="form-control"
+                            data-i18n-placeholder="subjectsPlaceholder"
+                            placeholder="ich, du, er, sie, wir">
+                    </div>
+                    <br />
+                    <div class="field-group">
+                        <label for="tense" data-i18n="tenseLabel">Tense</label>
+                        <select id="tense" name="tense">
+                            <option value="" selected data-i18n="autoOption">Auto</option>
+                            <option value="present" data-i18n="presentOption">Present</option>
+                            <option value="past" data-i18n="pastOption">Past</option>
+                            <option value="perfect" data-i18n="perfectOption">Perfect</option>
+                            <option value="future" data-i18n="futureOption">Future</option>
+                            <option value="conditional" data-i18n="conditionalOption">Conditional</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="field-group">
+                        <label for="topic" data-i18n="topicLabel">Topic</label>
+                        <input
+                            id="topic"
+                            name="topic"
+                            type="text"
+                            class="form-control"
+                            data-i18n-placeholder="topicPlaceholder"
+                            placeholder="daily routine, food, family, work">
+                    </div>
+                    <br />
+                    <div class="field-group full-width">
+                        <label for="expressions" data-i18n="expressionsLabel">Expressions to use</label>
+                        <input
+                            id="expressions"
+                            name="expressions"
+                            type="text"
+                            class="form-control"
+                            data-i18n-placeholder="expressionsPlaceholder"
+                            placeholder="zu Hause, im Park, am Morgen">
+                    </div>
+                </div>
+            </details>
+            <br />
+
+            <button type="submit" name="mode" value="ai" data-i18n="generateAiButton">
+                Generate AI exercise
+            </button>
+        </form>
+    </section>
+    <br />
+    <section class="generator-card secondary-card">
+        <details>
+            <summary data-i18n="manualModeSummary">Manual mode</summary>
+
+            <p class="help-text" data-i18n="manualModeIntro">
+                Already have your own sentences? Paste them here with underscores.
+            </p>
+
+            <form id="sentences" name="sentences" class="input-form manual-form"
+                    method="post" action="{% url 'exercises:manual_exercise_create' %}">
+                {% csrf_token %}
+
+                <label for="{{ form.source_text.id_for_label }}" data-i18n="textareaLabel">
+                    Sentences with blanks
+                </label>
+
+                {{ form.source_text }}
+
+                <p class="help-text" data-i18n="textareaHelp">
+                    Write one sentence per line. Each line should start with "- " and contain at least one underscore "_".
+                </p>
+
+                <button type="submit" name="mode" value="manual" data-i18n="createButton">
+                    Generate exercise
+                </button>
+            </form>
+
+            <div class="example-box">
+                <strong data-i18n="exampleLabel">Example:</strong>
+                <pre>- Ich _ müde.
 - Du _ glücklich.
 - Er _ zu Hause.</pre>
-    </div>
+            </div>
+        </details>
+    </section>
 {% endblock %}

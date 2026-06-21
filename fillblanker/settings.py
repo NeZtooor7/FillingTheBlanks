@@ -1,6 +1,9 @@
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = 'django-insecure-local-dev-only-change-me'
 DEBUG = False
@@ -66,3 +69,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+OPENAI_GENERATION_MODEL = os.getenv('OPENAI_GENERATION_MODEL', 'gpt-5-nano')
+OPENAI_CORRECTION_MODEL = os.getenv('OPENAI_CORRECTION_MODEL', 'gpt-5-mini')
+OPENAI_TIMEOUT_SECONDS = int(os.getenv('OPENAI_TIMEOUT_SECONDS', '45'))

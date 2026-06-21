@@ -1,0 +1,98 @@
+{% extends 'exercises/base.html' %}
+
+{% block content %}
+    <h1 data-i18n="correctionResultsTitle">Correction results</h1>
+
+    <p class="intro">
+        <span data-i18n="correctionResultsIntro">You got</span>
+        <strong>{{ correct_count }}</strong>
+        /
+        <strong>{{ total_blanks }}</strong>
+        <span data-i18n="correctionResultsIntroEnd">blanks correct.</span>
+    </p>
+
+    <section class="correction-summary">
+        {% if wrong_count == 0 %}
+            <p class="success-message" data-i18n="allCorrectMessage">
+                Excellent. All your answers matched the correct answers.
+            </p>
+        {% else %}
+            <p class="warning-message">
+                <strong>{{ wrong_count }}</strong>
+                <span data-i18n="wrongAnswersMessage">answer(s) need review.</span>
+            </p>
+        {% endif %}
+    </section>
+
+    <section class="correction-list">
+        {% for sentence in results %}
+            <article class="correction-card {% if sentence.sentence_is_correct %}is-correct{% else %}has-errors{% endif %}">
+                <header class="correction-card-header">
+                    <h2>
+                        {{ sentence.number }}.
+                        {% if sentence.sentence_is_correct %}
+                            ✅
+                        {% else %}
+                            ❌
+                        {% endif %}
+                    </h2>
+                </header>
+
+                <p>
+                    <strong data-i18n="yourSentenceLabel">Your sentence:</strong>
+                    {{ sentence.user_sentence }}
+                </p>
+
+                <p>
+                    <strong data-i18n="correctSentenceLabel">Correct sentence:</strong>
+                    {{ sentence.correct_sentence }}
+                </p>
+
+                <div class="blank-results">
+                    {% for blank in sentence.blanks %}
+                        <div class="blank-result {% if blank.is_correct %}is-correct{% else %}has-errors{% endif %}">
+                            <p>
+                                <strong data-i18n="blankLabel">Blank</strong>
+                                {{ blank.position }}:
+                                {% if blank.is_correct %}
+                                    <span data-i18n="goodMatchLabel">Good match</span>
+                                    ✅
+                                {% else %}
+                                    <span data-i18n="needsReviewLabel">Needs review</span>
+                                    ❌
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong data-i18n="yourAnswerLabel">Your answer:</strong>
+                                {{ blank.user_answer }}
+                            </p>
+
+                            {% if not blank.is_correct %}
+                                <p>
+                                    <strong data-i18n="correctAnswersLabel">Correct answer(s):</strong>
+                                    {{ blank.correct_answers|join:", " }}
+                                </p>
+
+                                {% if blank.explanation %}
+                                    <p>
+                                        <strong data-i18n="explanationLabel">Explanation:</strong>
+                                        {{ blank.explanation }}
+                                    </p>
+                                {% else %}
+                                    <p data-i18n="explanationUnavailable">
+                                        No AI explanation was available, but the correct answer is shown above.
+                                    </p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+
+    <a class="secondary-link" href="{% url 'exercises:home' %}" data-i18n="backLink">
+        Create another exercise
+    </a>
+{% endblock %}
