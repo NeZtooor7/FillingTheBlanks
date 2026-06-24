@@ -73,9 +73,16 @@
             {% block content %}{% endblock %}
         </section>
     </main>
+    <div id="page-loading-overlay" class="page-loading-overlay hidden" aria-live="polite" aria-busy="true">
+        <div class="loading-box">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p id="loading-message" class="loading-message">Loading...</p>
+        </div>
+    </div>
     <script src="{% static 'exercises/theme.js' %}"></script>
     <script src="{% static 'exercises/i18n.js' %}"></script>
     <script src="{% static 'exercises/multiselect.js' %}"></script>
     <script src="{% static 'exercises/learning_language.js' %}"></script>
+    <script src="{% static 'exercises/loading_overlay.js' %}"></script>
 </body>
 </html>

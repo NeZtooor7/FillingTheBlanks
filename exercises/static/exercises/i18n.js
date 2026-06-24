@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'No hay una explicación de IA disponible, pero la respuesta correcta se muestra arriba.',
       interfaceLanguageLabel: 'Idioma de la interfaz',
       exerciseLanguageLabel: 'Idioma del ejercicio',
+      generatingExerciseMessage: 'Generando ejercicio...',
+      checkingAnswersMessage: 'Comprobando respuestas...',
+      loadingButtonText: 'Cargando...',
     },
 
     en: {
@@ -138,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'No AI explanation was available, but the correct answer is shown above.',
       interfaceLanguageLabel: 'Interface language',
       exerciseLanguageLabel: 'Exercise language',
+      generatingExerciseMessage: 'Generating exercise...',
+      checkingAnswersMessage: 'Checking answers...',
+      loadingButtonText: 'Loading...',
     },
 
     de: {
@@ -205,6 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'Keine KI-Erklärung verfügbar, aber die richtige Antwort wird oben angezeigt.',
       interfaceLanguageLabel: 'Sprache der Oberfläche',
       exerciseLanguageLabel: 'Übungssprache',
+      generatingExerciseMessage: 'Übung wird erstellt...',
+      checkingAnswersMessage: 'Antworten werden geprüft...',
+      loadingButtonText: 'Lädt...',
     },
 
     ja: {
@@ -272,6 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'AIによる説明は利用できませんが、正解は上に表示されています。',
       interfaceLanguageLabel: '表示言語',
       exerciseLanguageLabel: '練習する言語',
+      generatingExerciseMessage: '練習を作成中...',
+      checkingAnswersMessage: '回答を確認中...',
+      loadingButtonText: '読み込み中...',
     },
 
     hi: {
@@ -339,6 +351,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'AI स्पष्टीकरण उपलब्ध नहीं है, लेकिन सही उत्तर ऊपर दिखाया गया है।',
       interfaceLanguageLabel: 'इंटरफ़ेस भाषा',
       exerciseLanguageLabel: 'अभ्यास की भाषा',
+      generatingExerciseMessage: 'अभ्यास बनाया जा रहा है...',
+      checkingAnswersMessage: 'उत्तर जाँचे जा रहे हैं...',
+      loadingButtonText: 'लोड हो रहा है...',
     },
 
     ro: {
@@ -406,6 +421,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'Nu există o explicație AI disponibilă, dar răspunsul corect este afișat mai sus.',
       interfaceLanguageLabel: 'Limba interfeței',
       exerciseLanguageLabel: 'Limba exercițiului',
+      generatingExerciseMessage: 'Se generează exercițiul...',
+      checkingAnswersMessage: 'Se verifică răspunsurile...',
+      loadingButtonText: 'Se încarcă...',
     },
 
     it: {
@@ -473,6 +491,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'Non è disponibile una spiegazione AI, ma la risposta corretta è mostrata sopra.',
       interfaceLanguageLabel: 'Lingua dell’interfaccia',
       exerciseLanguageLabel: 'Lingua dell’esercizio',
+      generatingExerciseMessage: 'Generazione esercizio...',
+      checkingAnswersMessage: 'Controllo delle risposte...',
+      loadingButtonText: 'Caricamento...',
     },
 
     pt: {
@@ -540,6 +561,9 @@ document.addEventListener('DOMContentLoaded', () => {
       explanationUnavailable: 'Nenhuma explicação da IA está disponível, mas a resposta correta é mostrada acima.',
       interfaceLanguageLabel: 'Idioma da interface',
       exerciseLanguageLabel: 'Idioma do exercício',
+      generatingExerciseMessage: 'Gerando exercício...',
+      checkingAnswersMessage: 'Verificando respostas...',
+      loadingButtonText: 'Carregando...',
     }
   };
 

@@ -557,3 +557,58 @@ button:disabled {
     outline-offset: 2px;
     border-color: var(--color-button);
 }
+
+.page-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(4px);
+    pointer-events: all;
+}
+
+body.dark-mode .page-loading-overlay {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.page-loading-overlay.hidden {
+    display: none;
+}
+
+.loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-width: 220px;
+    padding: 1.5rem 1.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-card);
+    color: var(--color-text);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.loading-spinner {
+    width: 52px;
+    height: 52px;
+    border: 5px solid var(--color-border);
+    border-top-color: var(--color-button);
+    border-radius: 50%;
+    animation: loading-spin 0.85s linear infinite;
+}
+
+.loading-message {
+    margin: 0;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+@keyframes loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
