@@ -248,22 +248,7 @@ The recommended budget-friendly setup is:
 - `gpt-5-nano` for exercise generation
 - `gpt-5-mini` for correction explanations
 
-Correct answers are checked locally first. The correction model is only called for wrong answers.
-
----
-
-## `.env.example`
-
-Commit this file to the repository as a template:
-
-```env
-OPENAI_API_KEY=your-real-api-key-here
-
-OPENAI_GENERATION_MODEL=gpt-5-nano
-OPENAI_CORRECTION_MODEL=gpt-5-mini
-
-OPENAI_TIMEOUT_SECONDS=45
-```
+Correct answers are checked locally first. The correction model is only called for wrong answers. You can copy and paste from the `.env.example` the structure of your new `.env` file and replace the values of the keys with what you need.
 
 Never commit your real `.env` file.
 
